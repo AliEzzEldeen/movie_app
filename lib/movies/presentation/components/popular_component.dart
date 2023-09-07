@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,7 +15,9 @@ class PopularComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MoviesBloc, MoviesState>(builder: (context, state) {
+    return BlocBuilder<MoviesBloc, MoviesState>(
+        buildWhen: (previous, current) => previous.popularState != current.popularState,
+        builder: (context, state) {
       switch (state.popularState) {
         case RequstState.isLoading:
           return const SizedBox(

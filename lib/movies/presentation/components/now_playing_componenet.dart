@@ -7,6 +7,7 @@ import 'package:movies_app/core/constance.dart';
 import 'package:movies_app/core/utils/enum.dart';
 import 'package:movies_app/movies/presentation/controller/movies_bloc.dart';
 import 'package:movies_app/movies/presentation/controller/movies_state.dart';
+import 'package:movies_app/movies/presentation/screens/movie_detail_screen.dart';
 
 class NowPlayingComponent extends StatelessWidget {
   const NowPlayingComponent({super.key});
@@ -14,6 +15,8 @@ class NowPlayingComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MoviesBloc, MoviesState>(
+      buildWhen: (previous, current) =>
+          previous.nowPlayingState != current.nowPlayingState,
       builder: (context, state) {
         switch (state.nowPlayingState) {
           case RequstState.isLoading:
@@ -33,7 +36,12 @@ class NowPlayingComponent extends StatelessWidget {
                     return GestureDetector(
                       key: const Key('openMovieMinimalDetail'),
                       onTap: () {
-                        /// TODO : NAVIGATE TO MOVIE DETAILS
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MovieDetailScreen(id: item.id),
+                            ));
                       },
                       child: Stack(
                         children: [
@@ -58,7 +66,7 @@ class NowPlayingComponent extends StatelessWidget {
                             child: CachedNetworkImage(
                               height: 560.0,
                               imageUrl:
-                                  AppConstance.imageUrl(item.backdropPath!),
+                                  AppConstance.imageUrl(item.backdropPath),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -90,7 +98,7 @@ class NowPlayingComponent extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 16.0),
                                   child: Text(
-                                    item.title!,
+                                    item.title,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 24,
